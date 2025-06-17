@@ -182,7 +182,7 @@ const ReportForm = () => {
       <div className="form-container">
         <img
           className="logo"
-          src="../../public/logoKRETZ.png"
+          src="https://res.cloudinary.com/dpa8t14c2/image/upload/v1750187780/Kretz-Practica/logos/clie3e7edfxtuydw9pyd.png"
           alt="Logo"
         />
 
