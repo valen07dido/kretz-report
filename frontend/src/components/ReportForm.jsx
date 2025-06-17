@@ -59,7 +59,7 @@ const ReportForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/odoo-report", {
+      const response = await fetch("https://kretz-report.onrender.com/api/odoo-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ deviceId, priority, description, key: authKey }),
