@@ -59,11 +59,19 @@ const ReportForm = () => {
     }
 
     try {
-      const response = await fetch("https://kretz-report.onrender.com/api/odoo-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deviceId, priority, description, key: authKey }),
-      });
+      const response = await fetch(
+        "https://kretz-report.onrender.com/api/odoo-report",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            deviceId,
+            priority,
+            description,
+            key: authKey,
+          }),
+        }
+      );
 
       const result = await response.json();
 
@@ -177,8 +185,38 @@ const ReportForm = () => {
           font-size: 0.9rem;
           color: #666;
         }
-      `}</style>
+            .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
 
+  .spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+      `}</style>
+        {isLoading && (
+    <div className="overlay">
+      <div className="spinner"></div>
+    </div>
+  )}
       <div className="form-container">
         <img
           className="logo"
