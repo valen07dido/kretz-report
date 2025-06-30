@@ -41,7 +41,6 @@ app.post("/api/odoo-report", async (req, res) => {
       ? equipoInfo.employee_id[0]
       : false,
   };
-  console.log("Datos del reporte:", bodyData);
   const response = await fetch(process.env.ODOO_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

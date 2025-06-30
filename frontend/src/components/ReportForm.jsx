@@ -6,8 +6,17 @@ const ReportForm = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
+  // Nuevo estado para controlar la visibilidad del cartel informativo
+  const [showInfoBanner, setShowInfoBanner] = useState(false);
 
   useEffect(() => {
+    // Lógica para mostrar el cartel informativo si es la primera visita
+    const hasAcceptedBanner = localStorage.getItem("infoBannerAccepted");
+    if (!hasAcceptedBanner) {
+      setShowInfoBanner(true);
+    }
+
+    // Tu lógica existente
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
     const key = params.get("key");
@@ -31,6 +40,12 @@ const ReportForm = () => {
 
     if (id) setDeviceId(id);
   }, []);
+
+  // Nueva función para manejar el clic en el botón del cartel
+  const handleAcceptInfoBanner = () => {
+    localStorage.setItem("infoBannerAccepted", "true");
+    setShowInfoBanner(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -185,38 +200,124 @@ const ReportForm = () => {
           font-size: 0.9rem;
           color: #666;
         }
-            .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
 
-  .spinner {
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #007bff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-  }
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(255,255,255,0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 999;
+        }
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+        .spinner {
+          border: 6px solid #f3f3f3;
+          border-top: 6px solid #007bff;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* --- Nuevos estilos para el cartel informativo --- */
+        .info-banner-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000; /* Debe estar por encima del spinner */
+          backdrop-filter: blur(4px);
+        }
+
+        .info-banner-content {
+          background: white;
+          padding: 2rem;
+          border-radius: 12px;
+          max-width: 500px;
+          margin: 1rem;
+          text-align: left;
+          box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .info-banner-content h3 {
+          margin-top: 0;
+          color: #333;
+        }
+
+        .info-banner-content p {
+          color: #555;
+          line-height: 1.6;
+        }
+        
+        .info-banner-content button {
+          background-color: #007bff;
+          color: white;
+          padding: 10px 25px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          width: 100%;
+          margin-top: 1.5rem;
+          transition: background-color 0.2s ease;
+        }
+
+        .info-banner-content button:hover {
+          background-color: #0056b3;
+        }
+        /* --- Fin de nuevos estilos --- */
       `}</style>
-        {isLoading && (
-    <div className="overlay">
-      <div className="spinner"></div>
-    </div>
-  )}
+
+      {/* --- Nuevo cartel informativo --- */}
+      {showInfoBanner && (
+        <div className="info-banner-overlay">
+          <div className="info-banner-content">
+            <h3>¡Bienvenido al Sistema de Reportes!</h3>
+            <p>
+              Esta aplicación te permite reportar fallas en los equipos de forma
+              rápida y sencilla. La aplicación carga automaticamente la tarea a ODOO para el
+              equipo de infraestructura.
+            </p>
+            <p>
+              Solamente se admiten <b>Fallas de Hardware</b> <br /> Por Ejemplo:
+              "Lento Funcionamiento"
+            </p>
+            <p>
+              <strong>¿Cómo funciona?</strong>
+              <br />
+              1. El equipo a reportar se detecta automáticamente al escanear el
+              QR.
+              <br />
+              2. Seleccioná una prioridad y describí el problema.
+              <br />
+              3. Hacé clic en "Enviar reporte" para notificar al equipo de
+              mantenimiento.
+            </p>
+            <button onClick={handleAcceptInfoBanner}>¡Entendido!</button>
+          </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
+
       <div className="form-container">
         <img
           className="logo"
